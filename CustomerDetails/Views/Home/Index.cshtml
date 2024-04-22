@@ -1,0 +1,70 @@
+﻿
+@model CustomerDetails.Models.PagedListViewModel<CustomerDetails.Models.CountryData>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<main>
+    <h2>Country List</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "search-form-container" }))
+    {
+        <p>
+            @Html.TextBox("searchString", null, new { @class = "search-input", placeholder = "Search..." })
+            <input type="submit" value="Search" class="search-button" />
+        </p>
+    }
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Pincode</th>
+                <th>Country</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var country in Model.PagedItems)
+            {
+                <tr>
+                    <td>@country.Id</td>
+                    <td>@country.Name</td>
+                    <td>@country.Address</td>
+                    <td>@country.City</td>
+                    <td>@country.Pincode</td>
+                    <td>@country.Country</td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { id = country.Id }) |
+                        @Html.ActionLink("Edit", "Edit", new { id = country.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = country.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    @if (Model.TotalPages > 1)
+    {
+        <div class="pagination">
+            <a href="@Url.Action("Index", new { page = Model.PageNumber - 1 })" class="prev">&laquo; Previous</a>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <a href="@Url.Action("Index", new { page = i })" class="page @(i == Model.PageNumber ? "active" : "")">@i</a>
+            }
+            <a href="@Url.Action("Index", new { page = Model.PageNumber + 1 })" class="next">Next &raquo;</a>
+        </div>
+    }
+
+
+
+</main>
